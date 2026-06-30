@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Git & GitHub — Field Notes</title>
+<style>
+  :root{
+    --bg:#0d1117;
+    --panel:#11161d;
+    --line:#22282f;
+    --text:#c9d1d9;
+    --muted:#6e7681;
+    --green:#3fb950;
+    --orange:#d29922;
+    --blue:#58a6ff;
+    --pink:#f47edb;
+    --red:#f85149;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:"SF Mono","JetBrains Mono",Consolas,monospace;
+    line-height:1.55;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:48px 24px 80px;}
+
+  header{margin-bottom:44px;border-bottom:1px solid var(--line);padding-bottom:24px;}
+  .prompt{color:var(--green);font-size:13px;letter-spacing:.5px;}
+  h1{
+    font-size:30px;
+    margin:8px 0 6px;
+    font-weight:600;
+    color:#f0f6fc;
+  }
+  .sub{color:var(--muted);font-size:14px;}
+
+  .section{margin-bottom:36px;}
+  .section-head{
+    display:flex;align-items:baseline;gap:10px;
+    margin-bottom:12px;
+  }
+  .tag{
+    font-size:11px;
+    padding:2px 8px;
+    border-radius:3px;
+    font-weight:600;
+    letter-spacing:.5px;
+  }
+  .tag.config{background:rgba(88,166,255,.12);color:var(--blue);border:1px solid rgba(88,166,255,.35);}
+  .tag.upload{background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.35);}
+  .tag.update{background:rgba(210,153,34,.12);color:var(--orange);border:1px solid rgba(210,153,34,.35);}
+  .tag.danger{background:rgba(248,81,73,.12);color:var(--red);border:1px solid rgba(248,81,73,.35);}
+  .tag.safe{background:rgba(63,185,80,.12);color:var(--green);border:1px solid rgba(63,185,80,.35);}
+
+  .section h2{
+    font-size:15px;margin:0;color:#f0f6fc;font-weight:600;
+  }
+  .note{color:var(--muted);font-size:13px;margin:4px 0 10px;}
+
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+  }
+  .or-divider{
+    text-align:center;
+    color:var(--muted);
+    font-size:11px;
+    letter-spacing:2px;
+    margin:18px 0;
+    position:relative;
+  }
+  .or-divider::before,.or-divider::after{
+    content:"";position:absolute;top:50%;width:38%;height:1px;background:var(--line);
+  }
+  .or-divider::before{left:0;}
+  .or-divider::after{right:0;}
+
+  .line{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    padding:9px 16px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+  }
+  .line:last-child{border-bottom:none;}
+  .line:hover{background:rgba(255,255,255,.025);}
+  .num{
+    color:var(--muted);
+    font-size:11px;
+    padding-top:2px;
+    width:18px;
+    flex-shrink:0;
+    text-align:right;
+  }
+  .cmd{
+    color:#e6edf3;
+    font-size:13.5px;
+    flex:1;
+    white-space:pre-wrap;
+    word-break:break-word;
+  }
+  .cmd .kw{color:var(--pink);}
+  .cmd .flag{color:var(--orange);}
+  .cmd .str{color:var(--green);}
+  .cmd .comment{color:var(--muted);font-style:italic;}
+
+  .copy-btn{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--muted);
+    font-size:10.5px;
+    padding:3px 8px;
+    border-radius:4px;
+    cursor:pointer;
+    font-family:inherit;
+    flex-shrink:0;
+    transition:.15s;
+    opacity:0;
+  }
+  .line:hover .copy-btn{opacity:1;}
+  .copy-btn:hover{border-color:var(--blue);color:var(--blue);}
+  .copy-btn.copied{border-color:var(--green);color:var(--green);}
+
+  .step-label{
+    font-size:11px;
+    color:var(--muted);
+    padding:10px 16px 0;
+    letter-spacing:.5px;
+    text-transform:uppercase;
+  }
+
+  footer{
+    margin-top:60px;
+    padding-top:20px;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:12px;
+    text-align:center;
+  }
+  footer .blink{color:var(--green);}
+
+  @media (max-width:560px){
+    h1{font-size:24px;}
+    .cmd{font-size:12.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="prompt">~/projects $ cat workflow.md</div>
+    <h1>Git & GitHub — Field Notes</h1>
+    <div class="sub">A working reference for branches, identities, and shipping code to GitHub.</div>
+  </header>
+
+  <!-- EMAIL CONFIG -->
+  <section class="section">
+    <div class="section-head">
+      <span class="tag config">CONFIG</span>
+      <h2>Email identity</h2>
+    </div>
+    <div class="note">Check which email Git is signing commits with, then change it per-repo or globally.</div>
+    <div class="card">
+      <div class="step-label">Check current email</div>
+      <div class="line"><span class="num">1</span><span class="cmd">git config user.email</span><button class="copy-btn" data-copy="git config user.email">copy</button></div>
+      <div class="line"><span class="num">2</span><span class="cmd">git config <span class="flag">--global</span> user.email</span><button class="copy-btn" data-copy="git config --global user.email">copy</button></div>
+      <div class="step-label">Set a new email</div>
+      <div class="line"><span class="num">3</span><span class="cmd">git config user.email <span class="str">"your-new-email@example.com"</span></span><button class="copy-btn" data-copy='git config user.email "your-new-email@example.com"'>copy</button></div>
+      <div class="line"><span class="num">4</span><span class="cmd">git config <span class="flag">--global</span> user.email <span class="str">"your-new-email@example.com"</span></span><button class="copy-btn" data-copy='git config --global user.email "your-new-email@example.com"'>copy</button></div>
+    </div>
+  </section>
+
+  <!-- BRANCH -->
+  <section class="section">
+    <div class="section-head">
+      <span class="tag config">BRANCH</span>
+      <h2>Switch to a new feature branch</h2>
+    </div>
+    <div class="card">
+      <div class="line"><span class="num">1</span><span class="cmd">git checkout <span class="flag">-b</span> feature</span><button class="copy-btn" data-copy="git checkout -b feature">copy</button></div>
+    </div>
+  </section>
+
+  <!-- UPLOAD -->
+  <section class="section">
+    <div class="section-head">
+      <span class="tag upload">UPLOAD</span>
+      <h2>Push a project to GitHub for the first time</h2>
+    </div>
+
+    <div class="note">Option A — manual repo creation via the CLI prompt:</div>
+    <div class="card">
+      <div class="line"><span class="num">1</span><span class="cmd">gh auth login</span><button class="copy-btn" data-copy="gh auth login">copy</button></div>
+      <div class="line"><span class="num">2</span><span class="cmd">git init</span><button class="copy-btn" data-copy="git init">copy</button></div>
+      <div class="line"><span class="num">3</span><span class="cmd">git add .</span><button class="copy-btn" data-copy="git add .">copy</button></div>
+      <div class="line"><span class="num">4</span><span class="cmd">git commit <span class="flag">-m</span> <span class="str">"first commit"</span></span><button class="copy-btn" data-copy='git commit -m "first commit"'>copy</button></div>
+      <div class="line"><span class="num">5</span><span class="cmd">git config user.email <span class="str">"your-new-email@example.com"</span></span><button class="copy-btn" data-copy='git config user.email "your-new-email@example.com"'>copy</button></div>
+      <div class="line"><span class="num">6</span><span class="cmd">git branch <span class="comment"># check current branch</span></span><button class="copy-btn" data-copy="git branch">copy</button></div>
+      <div class="line"><span class="num">7</span><span class="cmd">gh repo new</span><button class="copy-btn" data-copy="gh repo new">copy</button></div>
+    </div>
+
+    <div class="or-divider">OR</div>
+
+    <div class="note">Option B — one command creates and links the remote:</div>
+    <div class="card">
+      <div class="line"><span class="num">1</span><span class="cmd">gh auth login</span><button class="copy-btn" data-copy="gh auth login">copy</button></div>
+      <div class="line"><span class="num">2</span><span class="cmd">git init</span><button class="copy-btn" data-copy="git init">copy</button></div>
+      <div class="line"><span class="num">3</span><span class="cmd">git add .</span><button class="copy-btn" data-copy="git add .">copy</button></div>
+      <div class="line"><span class="num">4</span><span class="cmd">git commit <span class="flag">-m</span> <span class="str">"first commit"</span></span><button class="copy-btn" data-copy='git commit -m "first commit"'>copy</button></div>
+      <div class="line"><span class="num">5</span><span class="cmd">git branch <span class="comment"># optional check</span></span><button class="copy-btn" data-copy="git branch">copy</button></div>
+      <div class="line"><span class="num">6</span><span class="cmd">gh repo create <span class="flag">&lt;repository-name&gt;</span> <span class="flag">--public</span> <span class="flag">--source=.</span> <span class="flag">--remote=origin</span></span><button class="copy-btn" data-copy="gh repo create <repository-name> --public --source=. --remote=origin">copy</button></div>
+      <div class="line"><span class="num">7</span><span class="cmd"><span class="comment"># shorthand:</span> gh repo create my-awesome-project <span class="flag">-p -s . -r origin</span></span><button class="copy-btn" data-copy="gh repo create my-awesome-project -p -s . -r origin">copy</button></div>
+      <div class="line"><span class="num">8</span><span class="cmd"><span class="comment"># or link manually:</span> git remote add origin https://github.com/your-username/repo-name.git</span><button class="copy-btn" data-copy="git remote add origin https://github.com/your-username/repo-name.git">copy</button></div>
+      <div class="line"><span class="num">9</span><span class="cmd">git push <span class="flag">-u</span> origin main</span><button class="copy-btn" data-copy="git push -u origin main">copy</button></div>
+    </div>
+  </section>
+
+  <!-- UPDATE EXISTING -->
+  <section class="section">
+    <div class="section-head">
+      <span class="tag update">UPDATE</span>
+      <h2>Push changes to an existing repository</h2>
+    </div>
+
+    <div class="note">Step 1 — connect to the repo (new repo vs. linking an old one):</div>
+    <div class="card">
+      <div class="line"><span class="num">1</span><span class="cmd">gh auth login</span><button class="copy-btn" data-copy="gh auth login">copy</button></div>
+      <div class="step-label">For a new repository</div>
+      <div class="line"><span class="num">2</span><span class="cmd">git init</span><button class="copy-btn" data-copy="git init">copy</button></div>
+      <div class="line"><span class="num">3</span><span class="cmd">git add .</span><button class="copy-btn" data-copy="git add .">copy</button></div>
+      <div class="step-label">For an existing repository</div>
+      <div class="line"><span class="num">4</span><span class="cmd">git remote add origin https://github.com/yourusername/your-repo.git</span><button class="copy-btn" data-copy="git remote add origin https://github.com/yourusername/your-repo.git">copy</button></div>
+    </div>
+
+    <div class="note" style="margin-top:22px;">Step 2 — commit and push. Pick the path that matches your intent:</div>
+
+    <div class="section-head" style="margin-top:6px;">
+      <span class="tag danger">⚠ FORCE</span>
+      <h2 style="font-size:13px;">Overwrite remote history (deletes anything not in your local branch)</h2>
+    </div>
+    <div class="card">
+      <div class="line"><span class="num">1</span><span class="cmd">git add .</span><button class="copy-btn" data-copy="git add .">copy</button></div>
+      <div class="line"><span class="num">2</span><span class="cmd">git commit <span class="flag">-m</span> <span class="str">"Merge conflict resolved"</span></span><button class="copy-btn" data-copy='git commit -m "Merge conflict resolved"'>copy</button></div>
+      <div class="line"><span class="num">3</span><span class="cmd">git push <span class="flag">--force</span> origin main</span><button class="copy-btn" data-copy="git push --force origin main">copy</button></div>
+    </div>
+
+    <div class="section-head" style="margin-top:22px;">
+      <span class="tag safe">✓ SAFE</span>
+      <h2 style="font-size:13px;">Only update, keep everyone's history intact</h2>
+    </div>
+    <div class="card">
+      <div class="line"><span class="num">1</span><span class="cmd">git pull origin main <span class="flag">--rebase</span></span><button class="copy-btn" data-copy="git pull origin main --rebase">copy</button></div>
+      <div class="line"><span class="num">2</span><span class="cmd">git push <span class="flag">-u</span> origin main</span><button class="copy-btn" data-copy="git push -u origin main">copy</button></div>
+      <div class="line"><span class="num">3</span><span class="cmd">git add .</span><button class="copy-btn" data-copy="git add .">copy</button></div>
+      <div class="line"><span class="num">4</span><span class="cmd">git commit <span class="flag">-m</span> <span class="str">"Merge conflict resolved"</span></span><button class="copy-btn" data-copy='git commit -m "Merge conflict resolved"'>copy</button></div>
+      <div class="line"><span class="num">5</span><span class="cmd">git push <span class="flag">-u</span> origin main</span><button class="copy-btn" data-copy="git push -u origin main">copy</button></div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="blink">●</span> end of file — click any command to copy it
+  </footer>
+
+</div>
+
+<script>
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.getAttribute('data-copy');
+      navigator.clipboard.writeText(text).then(() => {
+        const original = btn.textContent;
+        btn.textContent = 'copied';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 1200);
+      });
+    });
+  });
+</script>
+</body>
+</html>
