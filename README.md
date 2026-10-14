@@ -1,4 +1,4 @@
-# Windows - credential Manager
+# -- Windows - credential Manager --
 # Git & GitHub Guide 
 
 ## Contents
