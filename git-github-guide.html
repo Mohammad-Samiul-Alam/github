@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git &amp; GitHub Field Guide</title>
+<style>
+:root{
+  --bg:#f3f5f9; --panel:#ffffff; --ink:#151b2e; --muted:#5b6479; --line:#dfe3ec;
+  --accent:#3b4bff; --accent-soft:#e8eaff; --code:#131a2c; --code-ink:#e6eaf7; --code-dim:#7f8bb0;
+  --fix:#c2410c; --fix-soft:#ffecdf; --add:#157a5b; --add-soft:#dcf5ec; --warn-soft:#fff6d6; --warn:#8a6100;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#0e1322; --panel:#161d33; --ink:#e8ecf8; --muted:#97a2c0; --line:#26304d;
+    --accent:#8a95ff; --accent-soft:#222a52; --code:#0a0e1a; --fix:#ff9a5c; --fix-soft:#3a2214;
+    --add:#5fd6ad; --add-soft:#12332a; --warn-soft:#352b0b; --warn:#f0c95a;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:20px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Inter","Segoe UI",system-ui,sans-serif}
+.layout{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1180px;margin:0 auto}
+nav{position:sticky;top:0;align-self:start;height:100vh;padding:36px 24px;border-right:1px solid var(--line);overflow:auto}
+nav .brand{font:700 20px/1.2 "Bricolage Grotesque","Inter",system-ui,sans-serif;letter-spacing:-.02em;margin-bottom:28px}
+nav .brand small{display:block;font:400 13px/1.4 "Inter",system-ui,sans-serif;color:var(--muted);margin-top:6px;letter-spacing:0}
+nav a{display:block;padding:8px 12px;margin:2px 0;border-radius:8px;color:var(--muted);text-decoration:none;font-size:14.5px}
+nav a:hover,nav a:focus-visible{background:var(--accent-soft);color:var(--accent);outline:none}
+main{padding:56px 40px 96px}
+header.hero{margin-bottom:56px}
+h1{font:800 clamp(34px,5vw,56px)/1.05 "Bricolage Grotesque","Inter",system-ui,sans-serif;letter-spacing:-.035em;margin:0 0 16px}
+.lede{max-width:60ch;color:var(--muted);font-size:18px;margin:0}
+.flow{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px;font:500 14px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
+.flow span{background:var(--panel);border:1px solid var(--line);padding:6px 12px;border-radius:999px}
+.flow i{font-style:normal;color:var(--accent);align-self:center}
+section{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:32px;margin-bottom:28px}
+h2{font:700 26px/1.2 "Bricolage Grotesque","Inter",system-ui,sans-serif;letter-spacing:-.02em;margin:0 0 6px}
+h3{font-size:16px;margin:28px 0 8px}
+p{margin:8px 0 14px;max-width:70ch}
+.sub{color:var(--muted);margin-bottom:20px}
+.code{position:relative;background:var(--code);border-radius:12px;margin:10px 0 16px;overflow:hidden}
+.code pre{margin:0;padding:16px 64px 16px 18px;overflow-x:auto;color:var(--code-ink);font:14px/1.75 "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace}
+.code .c{color:var(--code-dim)}
+.copy{position:absolute;top:10px;right:10px;border:1px solid #2b3558;background:#1c2542;color:#c9d2f2;border-radius:8px;padding:4px 10px;font:12px "Inter",system-ui,sans-serif;cursor:pointer}
+.copy:hover,.copy:focus-visible{background:#2a3563;outline:2px solid var(--accent)}
+.note{border-radius:12px;padding:12px 16px;margin:14px 0;font-size:15px;border-left:4px solid}
+.note b{display:block;margin-bottom:2px}
+.note.fix{background:var(--fix-soft);border-color:var(--fix)}
+.note.fix b{color:var(--fix)}
+.note.add{background:var(--add-soft);border-color:var(--add)}
+.note.add b{color:var(--add)}
+.note.warn{background:var(--warn-soft);border-color:var(--warn)}
+.note.warn b{color:var(--warn)}
+code.i{font:13.5px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;background:var(--accent-soft);color:var(--accent);padding:1px 6px;border-radius:5px}
+table{width:100%;border-collapse:collapse;font-size:14.5px;display:block;overflow-x:auto}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:600}
+td:first-child{white-space:nowrap}
+.tabs{display:flex;gap:6px;margin:16px 0 0}
+.tab{border:1px solid var(--line);background:var(--bg);color:var(--muted);border-radius:10px 10px 0 0;padding:8px 16px;font:600 14px "Inter",system-ui,sans-serif;cursor:pointer;border-bottom:none}
+.tab[aria-selected=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.panel{border:1px solid var(--line);border-radius:0 12px 12px 12px;padding:16px 18px 6px}
+.panel[hidden]{display:none}
+footer{color:var(--muted);font-size:14px;text-align:center;margin-top:40px}
+@media (max-width:860px){
+  .layout{grid-template-columns:1fr}
+  nav{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:20px}
+  nav a{display:inline-block}
+  main{padding:32px 18px 64px}
+  section{padding:22px 18px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="layout">
+<nav aria-label="Sections">
+  <div class="brand">Git &amp; GitHub<small>A field guide for solo projects</small></div>
+  <a href="#identity">1. Identity (email)</a>
+  <a href="#branches">2. Branches</a>
+  <a href="#upload">3. Upload a new project</a>
+  <a href="#update">4. Update a repository</a>
+  <a href="#conflicts">5. Merge conflicts</a>
+  <a href="#extras">6. Everyday extras</a>
+  <a href="#fixes">7. What was corrected</a>
+</nav>
+
+<main>
+<header class="hero">
+  <h1>Git &amp; GitHub Field Guide</h1>
+  <p class="lede">Every command from your notes, put in the right order, with the missing steps filled in. Press <b>Copy</b> on any block to grab it.</p>
+  <div class="flow" aria-label="Typical flow">
+    <span>login</span><i>→</i><span>init</span><i>→</i><span>add</span><i>→</i><span>commit</span><i>→</i><span>create repo</span><i>→</i><span>push</span>
+  </div>
+</header>
+
+<section id="identity">
+  <h2>1. Check and change your Git email</h2>
+  <p class="sub">GitHub links commits to you by email. Check it before your first commit.</p>
+
+  <h3>Check the current email</h3>
+  <div class="code"><button class="copy">Copy</button><pre><span class="c"># this repository only</span>
+git config user.email
+<span class="c"># all repositories on this computer</span>
+git config --global user.email
+<span class="c"># see everything and where each value comes from</span>
+git config --list --show-origin</pre></div>
+
+  <h3>Change the email</h3>
+  <div class="code"><button class="copy">Copy</button><pre><span class="c"># this repository only</span>
+git config user.email "your-new-email@example.com"
+<span class="c"># all repositories (default)</span>
+git config --global user.email "your-new-email@example.com"
+<span class="c"># also set your name</span>
+git config --global user.name "Your Name"</pre></div>
+
+  <div class="note add"><b>Added: keep your email private</b>On GitHub, go to Settings → Emails and tick "Keep my email addresses private". Then use the <code class="i">ID+username@users.noreply.github.com</code> address shown there.</div>
+  <div class="note warn"><b>Good to know</b>Changing the email only affects <em>future</em> commits. Commits you already made keep the old email.</div>
+</section>
+
+<section id="branches">
+  <h2>2. Branches</h2>
+  <p class="sub">Work on a feature without touching <code class="i">main</code>.</p>
+  <div class="code"><button class="copy">Copy</button><pre><span class="c"># list branches (* marks the current one)</span>
+git branch
+<span class="c"># create and switch to a new branch</span>
+git checkout -b feature
+<span class="c"># modern equivalent</span>
+git switch -c feature
+<span class="c"># go back to main</span>
+git checkout main</pre></div>
+
+  <h3>Added: rename the default branch to main</h3>
+  <p>Older Git versions create <code class="i">master</code> on <code class="i">git init</code>. Your push command uses <code class="i">main</code>, so rename it after the first commit:</p>
+  <div class="code"><button class="copy">Copy</button><pre>git branch -M main</pre></div>
+
+  <h3>Added: merge a feature branch</h3>
+  <div class="code"><button class="copy">Copy</button><pre>git push -u origin feature
+gh pr create --fill     <span class="c"># open a pull request</span>
+gh pr merge --merge     <span class="c"># or merge it on github.com</span></pre></div>
+</section>
+
+<section id="upload">
+  <h2>3. Upload a new project to GitHub</h2>
+  <p class="sub">Run these in your project folder. Choose the route you prefer.</p>
+
+  <div class="note fix"><b>Corrected order</b>Set your email <em>before</em> the first commit, otherwise that commit carries the wrong address.</div>
+
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" data-p="p1">Route A: one command</button>
+    <button class="tab" role="tab" aria-selected="false" data-p="p2">Route B: manual remote</button>
+  </div>
+
+  <div class="panel" id="p1">
+    <div class="code"><button class="copy">Copy</button><pre>gh auth login
+git init
+git config user.email "your-new-email@example.com"
+git add .
+git commit -m "first commit"
+git branch -M main
+gh repo create my-awesome-project --public --source=. --remote=origin --push</pre></div>
+    <p>Use <code class="i">--private</code> instead of <code class="i">--public</code> for a private repository. <code class="i">--push</code> uploads for you, so the separate push step is not needed.</p>
+    <div class="note fix"><b>Corrected</b><code class="i">gh repo new</code> is not a command. The right one is <code class="i">gh repo create</code>. Also, <code class="i">-p</code> means <code class="i">--template</code>, not public. Use the full <code class="i">--public</code> flag.</div>
+  </div>
+
+  <div class="panel" id="p2" hidden>
+    <p>Create an empty repository on github.com first (no README), then:</p>
+    <div class="code"><button class="copy">Copy</button><pre>gh auth login
+git init
+git config user.email "your-new-email@example.com"
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/your-username/repo-name.git
+git push -u origin main</pre></div>
+    <p>Check that the remote is set correctly:</p>
+    <div class="code"><button class="copy">Copy</button><pre>git remote -v</pre></div>
+  </div>
+
+  <div class="note add"><b>Added: create a .gitignore first</b>Before <code class="i">git add .</code>, list files you never want online (secrets, dependencies, build output), for example:</div>
+  <div class="code"><button class="copy">Copy</button><pre>.env
+node_modules/
+__pycache__/
+.DS_Store</pre></div>
+</section>
+
+<section id="update">
+  <h2>4. Update an existing repository</h2>
+
+  <h3>First time only: connect the folder to the repository</h3>
+  <div class="code"><button class="copy">Copy</button><pre>gh auth login
+git init                  <span class="c"># skip if the folder is already a git repo</span>
+git remote add origin https://github.com/yourusername/your-repo.git
+git remote -v             <span class="c"># verify</span></pre></div>
+  <div class="note add"><b>Added</b>If you get "remote origin already exists", change it instead: <code class="i">git remote set-url origin &lt;url&gt;</code>. If you started with <code class="i">gh repo clone</code>, this step is not needed.</div>
+
+  <h3>Normal update (recommended)</h3>
+  <p>Adds, edits and deletions in your folder all go online. Nothing on GitHub is overwritten.</p>
+  <div class="code"><button class="copy">Copy</button><pre>git add .
+git commit -m "Describe what changed"
+git pull --rebase origin main   <span class="c"># bring in anyone else's changes first</span>
+git push -u origin main</pre></div>
+
+  <h3>Force update (your folder replaces GitHub)</h3>
+  <p>Use this only when you want GitHub to match your local copy exactly, discarding commits that exist only online.</p>
+  <div class="code"><button class="copy">Copy</button><pre>git add .
+git commit -m "Replace remote with local version"
+git push --force-with-lease origin main</pre></div>
+  <div class="note fix"><b>Corrected</b>Plain <code class="i">--force</code> can erase a teammate's work without checking. <code class="i">--force-with-lease</code> does the same job but refuses if the remote has commits you have not seen. Also, files you deleted locally are removed online by a normal push as well, once you commit the deletion.</div>
+  <div class="note warn"><b>Never force-push</b>to a shared branch your team uses, unless everyone has agreed.</div>
+</section>
+
+<section id="conflicts">
+  <h2>5. Resolving a merge conflict</h2>
+  <p class="sub">Your notes put <code class="i">push</code> before <code class="i">add</code> and <code class="i">commit</code>. The working order is below.</p>
+  <div class="code"><button class="copy">Copy</button><pre>git pull --rebase origin main
+<span class="c"># Git stops and marks conflicts in the files:</span>
+<span class="c"># &lt;&lt;&lt;&lt;&lt;&lt;&lt; yours   =======   theirs &gt;&gt;&gt;&gt;&gt;&gt;&gt;</span>
+<span class="c"># edit each file, keep what you want, delete the markers</span>
+git add .
+git rebase --continue
+git push -u origin main</pre></div>
+  <div class="note add"><b>Added: bail out safely</b><code class="i">git rebase --abort</code> returns you to the state before the pull. After a plain <code class="i">git pull</code> (merge) conflict, finish with <code class="i">git add .</code> then <code class="i">git commit -m "Merge conflict resolved"</code>.</div>
+</section>
+
+<section id="extras">
+  <h2>6. Everyday extras</h2>
+  <table>
+    <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td><code class="i">git status</code></td><td>Shows changed, staged and untracked files</td></tr>
+      <tr><td><code class="i">git diff</code></td><td>Shows unstaged changes line by line</td></tr>
+      <tr><td><code class="i">git log --oneline --graph</code></td><td>Compact commit history</td></tr>
+      <tr><td><code class="i">git restore &lt;file&gt;</code></td><td>Discards changes to a file (cannot be undone)</td></tr>
+      <tr><td><code class="i">git restore --staged &lt;file&gt;</code></td><td>Unstages a file but keeps your edits</td></tr>
+      <tr><td><code class="i">git commit --amend</code></td><td>Fixes the last commit message or adds forgotten files (before pushing)</td></tr>
+      <tr><td><code class="i">git stash</code> / <code class="i">git stash pop</code></td><td>Parks unfinished work, then brings it back</td></tr>
+      <tr><td><code class="i">git pull origin main</code></td><td>Downloads and merges the latest online changes</td></tr>
+      <tr><td><code class="i">gh repo clone user/repo</code></td><td>Downloads a repository to your computer</td></tr>
+      <tr><td><code class="i">gh auth status</code></td><td>Checks you are logged in</td></tr>
+      <tr><td><code class="i">gh repo view --web</code></td><td>Opens the repository in your browser</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="fixes">
+  <h2>7. What was corrected or added</h2>
+  <table>
+    <thead><tr><th>Where</th><th>Change</th></tr></thead>
+    <tbody>
+      <tr><td>Upload steps</td><td>Email is now set before the first commit</td></tr>
+      <tr><td><code class="i">gh repo new</code></td><td>Replaced with <code class="i">gh repo create</code></td></tr>
+      <tr><td><code class="i">-p</code> flag</td><td>It means <code class="i">--template</code>; use <code class="i">--public</code> or <code class="i">--private</code></td></tr>
+      <tr><td>Branch name</td><td>Added <code class="i">git branch -M main</code> so pushing to <code class="i">main</code> works</td></tr>
+      <tr><td>Update flow</td><td>Order is now add, commit, pull, push</td></tr>
+      <tr><td>Force push</td><td>Uses <code class="i">--force-with-lease</code> with a warning</td></tr>
+      <tr><td>Conflicts</td><td>Added <code class="i">git rebase --continue</code> and abort option</td></tr>
+      <tr><td>New</td><td>.gitignore, user.name, noreply email, remote checks, pull requests, extras table</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>Git &amp; GitHub Field Guide</footer>
+</main>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=b.nextElementSibling.innerText;
+    var done=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1400)};
+    if(navigator.clipboard){navigator.clipboard.writeText(t).then(done,done)}else{done()}
+  });
+});
+document.querySelectorAll('.tab').forEach(function(t){
+  t.addEventListener('click',function(){
+    document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',x===t)});
+    document.querySelectorAll('.panel').forEach(function(p){p.hidden=(p.id!==t.dataset.p)});
+  });
+});
+</script>
+</body>
+</html>

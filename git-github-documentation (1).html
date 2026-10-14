@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Git & GitHub Guide</title>
+<style>
+:root{
+  --bg:#f2f5fa; --panel:#ffffff; --panel2:#eaf0f8; --line:#d3ddec;
+  --text:#14243f; --muted:#5b6c8a; --accent:#0b6fb0; --accent-soft:#d8ecfa;
+  --note:#9a5b00; --note-bg:#fff1d6; --term:#0f1b30; --term-text:#dce8fb; --term-prompt:#4fd1ff;
+  --sans: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", "Cascadia Code", Consolas, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0a1220; --panel:#101a2e; --panel2:#16223a; --line:#223250;
+    --text:#e4ecfa; --muted:#8798b8; --accent:#4fd1ff; --accent-soft:#12304a;
+    --note:#ffb454; --note-bg:#2e2412; --term:#070d19; --term-text:#dce8fb; --term-prompt:#4fd1ff;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0a1220; --panel:#101a2e; --panel2:#16223a; --line:#223250;
+  --text:#e4ecfa; --muted:#8798b8; --accent:#4fd1ff; --accent-soft:#12304a;
+  --note:#ffb454; --note-bg:#2e2412; --term:#070d19; --term-text:#dce8fb; --term-prompt:#4fd1ff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:24px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.55;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:44px 44px;background-position:-1px -1px}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,transparent 0%,var(--bg) 75%);pointer-events:none;z-index:0;opacity:.92}
+.shell{position:relative;z-index:1;max-width:1120px;margin:0 auto;padding:40px 20px 80px;display:grid;grid-template-columns:210px minmax(0,1fr);gap:40px}
+@media(max-width:860px){.shell{grid-template-columns:1fr;gap:20px}}
+
+nav{position:sticky;top:24px;align-self:start}
+@media(max-width:860px){nav{position:static}}
+.brand{font-family:var(--mono);font-weight:700;font-size:1.05rem;margin:0 0 18px;display:flex;align-items:center;gap:10px}
+.brand i{width:12px;height:12px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+nav a{display:block;color:var(--muted);text-decoration:none;font-size:.92rem;padding:7px 12px;border-left:2px solid var(--line)}
+nav a:hover,nav a:focus-visible{color:var(--text);border-left-color:var(--accent);outline:none;background:var(--accent-soft)}
+.theme{margin-top:16px;font:inherit;font-size:.85rem;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+.theme:hover,.theme:focus-visible{color:var(--text);border-color:var(--accent);outline:none}
+
+header h1{font-size:clamp(2rem,5vw,3.1rem);line-height:1.08;letter-spacing:-.03em;margin:0 0 36px;font-weight:800}
+header h1 span{font-family:var(--mono);color:var(--accent);font-weight:600}
+
+section{margin-bottom:52px}
+h2{font-size:1.45rem;letter-spacing:-.01em;margin:0 0 14px}
+h3{font-size:.95rem;margin:26px 0 10px;color:var(--accent);font-family:var(--mono);font-weight:600}
+
+.term{background:var(--term);border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:0 0 14px}
+.term-bar{display:flex;align-items:center;gap:7px;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.08);font-family:var(--mono);font-size:.76rem;color:#8798b8}
+.term-bar b{width:9px;height:9px;border-radius:50%;background:#34456a;display:inline-block}
+.term-bar span{margin-left:6px}
+.cmd{display:flex;align-items:center;gap:10px;padding:9px 14px;font-family:var(--mono);font-size:.88rem;color:var(--term-text)}
+.cmd + .cmd{border-top:1px solid rgba(255,255,255,.05)}
+.cmd:hover{background:rgba(79,209,255,.06)}
+.cmd::before{content:"$";color:var(--term-prompt);flex:none}
+.cmd code{flex:1;min-width:0;overflow-x:auto;white-space:pre;font:inherit;scrollbar-width:thin}
+.cmd .tag{flex:none;font-size:.72rem;color:#ffb454;border:1px solid #5a4318;border-radius:4px;padding:1px 7px;font-family:var(--sans)}
+.copy{flex:none;font-family:var(--sans);font-size:.74rem;color:#9fb2d4;background:transparent;border:1px solid #2c3d62;border-radius:5px;padding:3px 9px;cursor:pointer}
+.copy:hover,.copy:focus-visible{color:#fff;border-color:var(--term-prompt);outline:none}
+.copy.done{color:#7ee2a8;border-color:#7ee2a8}
+.or{padding:2px 14px;font-family:var(--mono);font-size:.72rem;color:#8798b8;background:rgba(255,255,255,.03);border-top:1px solid rgba(255,255,255,.05)}
+
+.flow{position:relative;margin:0 0 6px;padding-left:26px}
+.flow::before{content:"";position:absolute;left:7px;top:16px;bottom:16px;width:2px;background:var(--line)}
+.flow .step{position:relative;margin-bottom:12px}
+.flow .step::before{content:"";position:absolute;left:-24px;top:16px;width:10px;height:10px;border-radius:50%;background:var(--bg);border:2px solid var(--accent)}
+.flow .step .term{margin:0}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 22px}
+.label{display:inline-block;font-size:.82rem;font-weight:600;background:var(--panel2);border:1px solid var(--line);color:var(--text);border-radius:999px;padding:3px 12px;margin:0 0 12px}
+.label.danger{background:var(--note-bg);color:var(--note);border-color:var(--note)}
+.card .term{margin:0}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:700px){.cols{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<nav aria-label="Contents">
+  <p class="brand"><i></i>git / github</p>
+  <a href="#email">Check email</a>
+  <a href="#change-email">Change email</a>
+  <a href="#branch">Change branch</a>
+  <a href="#upload">Project upload</a>
+  <a href="#update">Repository update</a>
+  <button class="theme" id="theme" type="button">Toggle theme</button>
+</nav>
+
+<main>
+<header>
+  <h1>Git &amp; GitHub <span>guide</span></h1>
+</header>
+
+<section id="email">
+  <h2>Check Git email</h2>
+  <div class="term">
+    <div class="term-bar"><b></b><b></b><b></b><span>terminal</span></div>
+    <div class="cmd"><code>git config user.email</code></div>
+    <div class="or">or</div>
+    <div class="cmd"><code>git config --global user.email</code></div>
+  </div>
+</section>
+
+<section id="change-email">
+  <h2>Change Git email</h2>
+  <div class="term">
+    <div class="term-bar"><b></b><b></b><b></b><span>terminal</span></div>
+    <div class="cmd"><code>git config user.email "your-new-email@example.com"</code></div>
+    <div class="or">or</div>
+    <div class="cmd"><code>git config --global user.email "your-new-email@example.com"</code></div>
+  </div>
+</section>
+
+<section id="branch">
+  <h2>Git change main → feature branch (new)</h2>
+  <div class="term">
+    <div class="term-bar"><b></b><b></b><b></b><span>terminal</span></div>
+    <div class="cmd"><code>git checkout -b feature</code></div>
+  </div>
+</section>
+
+<section id="upload">
+  <h2>GitHub project upload</h2>
+
+  <h3>Method 1</h3>
+  <div class="flow">
+    <div class="step"><div class="term"><div class="cmd"><code>gh auth login</code></div></div></div>
+    <div class="step"><div class="term"><div class="cmd"><code>git init</code></div></div></div>
+    <div class="step"><div class="term"><div class="cmd"><code>git add .</code></div></div></div>
+    <div class="step"><div class="term"><div class="cmd"><code>git config user.email "your-new-email@example.com"</code></div></div></div>
+    <div class="step"><div class="term"><div class="cmd"><code>git commit -m "first commit"</code></div></div></div>
+    <div class="step"><div class="term"><div class="cmd"><code>git branch</code><span class="tag">checking branch</span></div></div></div>
+    <div class="step"><div class="term"><div class="cmd"><code>gh repo create</code></div></div></div>
+  </div>
+
+  <h3>Method 2</h3>
+  <div class="flow">
+    <div class="step"><div class="term"><div class="cmd"><code>gh auth login</code></div></div></div>
+    <div class="step"><div class="term"><div class="cmd"><code>git init</code></div></div></div>
+    <div class="step"><div class="term"><div class="cmd"><code>git add .</code></div></div></div>
+    <div class="step"><div class="term"><div class="cmd"><code>git commit -m "first commit"</code></div></div></div>
+    <div class="step"><div class="term"><div class="cmd"><code>git branch</code><span class="tag">not required</span></div></div></div>
+    <div class="step">
+      <div class="term">
+        <div class="cmd"><code>gh repo create &lt;repository-name&gt; --public --source=. --remote=origin</code></div>
+        <div class="or">or</div>
+        <div class="cmd"><code>gh repo create my-awesome-project -p -s . -r origin</code></div>
+        <div class="or">or</div>
+        <div class="cmd"><code>git remote add origin https://github.com/your-username/repo-name.git</code></div>
+      </div>
+    </div>
+    <div class="step"><div class="term"><div class="cmd"><code>git branch -M main</code></div></div></div>
+    <div class="step"><div class="term"><div class="cmd"><code>git push -u origin main</code></div></div></div>
+  </div>
+</section>
+
+<section id="update">
+  <h2>GitHub repository update</h2>
+
+  <h3>1st step</h3>
+  <div class="flow">
+    <div class="step"><div class="term"><div class="cmd"><code>gh auth login</code></div></div></div>
+    <div class="step">
+      <div class="term">
+        <div class="term-bar"><b></b><b></b><b></b><span>for creating a new repository</span></div>
+        <div class="cmd"><code>git init</code></div>
+        <div class="cmd"><code>git add .</code></div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="term">
+        <div class="term-bar"><b></b><b></b><b></b><span>for updating an old repository</span></div>
+        <div class="cmd"><code>git remote add origin https://github.com/yourusername/your-repo.git</code></div>
+        <div class="or">if origin already exists</div>
+        <div class="cmd"><code>git remote set-url origin https://github.com/yourusername/your-repo.git</code></div>
+      </div>
+    </div>
+  </div>
+
+  <h3>2nd step: GitHub project update</h3>
+  <div class="cols">
+    <div class="card">
+      <span class="label danger">Remove everything if you delete something</span>
+      <div class="term">
+        <div class="cmd"><code>git add .</code></div>
+        <div class="cmd"><code>git commit -m "Merge conflict resolved"</code></div>
+        <div class="cmd"><code>git push --force origin main</code></div>
+      </div>
+    </div>
+    <div class="card">
+      <span class="label">Only update, nothing deleted</span>
+      <div class="term">
+        <div class="cmd"><code>git add .</code></div>
+        <div class="cmd"><code>git commit -m "Merge conflict resolved"</code></div>
+        <div class="cmd"><code>git pull origin main --rebase</code></div>
+        <div class="cmd"><code>git push -u origin main</code></div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+</div>
+
+<script>
+document.querySelectorAll('.cmd').forEach(function(row){
+  var code=row.querySelector('code'); if(!code) return;
+  var b=document.createElement('button');
+  b.className='copy'; b.type='button'; b.textContent='Copy';
+  b.addEventListener('click',function(){
+    var t=code.textContent;
+    var done=function(){b.textContent='Copied';b.classList.add('done');setTimeout(function(){b.textContent='Copy';b.classList.remove('done')},1400)};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,function(){})}
+    else{var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){}document.body.removeChild(a)}
+  });
+  row.appendChild(b);
+});
+document.getElementById('theme').addEventListener('click',function(){
+  var r=document.documentElement;
+  var dark=r.getAttribute('data-theme')?r.getAttribute('data-theme')==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;
+  r.setAttribute('data-theme',dark?'light':'dark');
+});
+</script>
+</body>
+</html>
