@@ -1,4 +1,5 @@
-# Git & GitHub Guide
+# Windows - credential Manager
+# Git & GitHub Guide 
 
 ## Contents
 
