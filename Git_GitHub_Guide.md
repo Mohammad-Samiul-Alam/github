@@ -8,6 +8,7 @@
 - [Git change main → feature branch (new)](#git-change-main--feature-branch-new)
 - [GitHub project upload](#github-project-upload)
 - [GitHub repository update](#github-repository-update)
+- [Quick GitHub Update Commands](#quick-github-update-commands)
 
 ---
 
