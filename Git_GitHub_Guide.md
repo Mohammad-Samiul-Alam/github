@@ -123,8 +123,6 @@ git add .
 git commit -m "Merge conflict resolved"
 git push -u origin main
 ```
-update this
-
 ## Quick GitHub Update Commands
 
 ```bash
