@@ -125,24 +125,12 @@ git push -u origin main
 ```
 update this
 
+## Quick GitHub Update Commands
+
 ```bash
-Step 1: Remove the nested Git repository
-তুমি যেহেতু parent folder-এর GitHub repository update করতে চাচ্ছো, চালাও:
-rm -rf deblur-image-restoration/
-এটি শুধু nested folder মুছে দেবে। তোমার main project files নিরাপদ থাকবে।
-
-Step 2: Add all files
-git add .
-
-Step 3: Commit changes
-git commit -m "Update image restoration project"
-
-Step 4: Push to GitHub
-git push origin mai
-```
-```bash
-rm -rf folder-name/
-git add .
-git commit -m "Update image restoration project"
+git status
+git pull --rebase origin main
+git add -A
+git commit -m "Update project files"
 git push origin main
 ```
