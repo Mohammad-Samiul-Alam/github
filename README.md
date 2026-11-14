@@ -169,7 +169,9 @@ git remote set-url origin REPOSITORY_URL
 
 ### Sync Existing GitHub Repository
 ### If Origin Already Exists 
+```bash
 git pull origin main --no-rebase --allow-unrelated-histories
 git add .
 git commit -m "Update project"
 git push origin main
+```
