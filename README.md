@@ -167,7 +167,8 @@ git remote set-url origin REPOSITORY_URL
 
 **Note:** Resolve merge conflicts before pushing. Never use `git push --force` if you want to preserve existing GitHub files.
 
-### If Origin Already Exists / ### Sync Existing GitHub Repository
+### Sync Existing GitHub Repository
+### If Origin Already Exists 
 git pull origin main --no-rebase --allow-unrelated-histories
 git add .
 git commit -m "Update project"
