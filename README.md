@@ -9,6 +9,10 @@
 - [GitHub project upload](#github-project-upload)
 - [GitHub repository update](#github-repository-update)
 - [Quick GitHub Update Commands](#quick-github-update-commands)
+- [Quick Git & GitHub Upload Commands](#git--github-commands)
+- [First Time Upload](#first-time-upload)
+- [Update Existing Repository](#update-existing-repository)
+- [Fix Existing Remote](#if-origin-already-exists)
 
 ---
 
@@ -133,3 +137,31 @@ git add -A
 git commit -m "Update project files"
 git push origin main
 ```
+## Git & GitHub Commands
+
+### First Time Upload
+```bash
+gh auth login
+cd /d H:\YourProjectFolder
+git init
+git remote add origin REPOSITORY_URL
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git push -u origin main
+```
+
+### Update Existing Repository
+```bash
+git add .
+git commit -m "Update project"
+git pull origin main --no-rebase
+git push origin main
+```
+
+### If origin Already Exists
+```bash
+git remote set-url origin REPOSITORY_URL
+```
+
+**Note:** Resolve merge conflicts before pushing. Never use `git push --force` if you want to preserve existing GitHub files.
