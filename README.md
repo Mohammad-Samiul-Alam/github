@@ -14,7 +14,6 @@
 - [Update Existing Repository](#update-existing-repository)
 - [Fix Existing Remote](#if-origin-already-exists)
 - [Sync Existing GitHub Repository](#sync-existing-github-repository)
-- [Fix Existing Remote](#fix-existing-remote)
 ---
 
 ## Check email on GitHub
