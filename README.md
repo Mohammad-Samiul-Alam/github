@@ -13,7 +13,8 @@
 - [First Time Upload](#first-time-upload)
 - [Update Existing Repository](#update-existing-repository)
 - [Fix Existing Remote](#if-origin-already-exists)
-
+- [Sync Existing GitHub Repository](#sync-existing-github-repository)
+- [Fix Existing Remote](#fix-existing-remote)
 ---
 
 ## Check email on GitHub
@@ -165,3 +166,9 @@ git remote set-url origin REPOSITORY_URL
 ```
 
 **Note:** Resolve merge conflicts before pushing. Never use `git push --force` if you want to preserve existing GitHub files.
+
+### If Origin Already Exists / ### Sync Existing GitHub Repository
+git pull origin main --no-rebase --allow-unrelated-histories
+git add .
+git commit -m "Update project"
+git push origin main
